@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: short-app-deployment
+  name: conv-app-deployment
 spec:
   # Задаётся кол-во реплик контейнера, из параметра template,
   # который описывает контейнер ниже.
-  replicas: 5
+  replicas: 1
   selector:
     matchLabels:
       components: frontend
@@ -17,11 +17,11 @@ spec:
         components: frontend
     spec:
       containers:
-        - name: short-app
-          image: antonlarichev/short-app:v1.0
+        - name: conv-app
+          image: antonlarichev/conv-app:1.2
           ports:
             - containerPort: 80
           resources:
             limits:
-              memory: "128Mi"
-              cpu: "100m" # полная загрузка, 500m - 50%, 250M - 25%, 125 - 12,5%, 100 - 10%
+              memory: "1028Mi"
+              cpu: "300m" # полная загрузка, 500m - 50%, 250M - 25%, 125 - 12,5%, 100 - 10%
