@@ -1,3 +1,7 @@
 # kubgo
 Конвертер изображений
-git pull
+
+### Проброс порта для localhost
+```
+kubectl port-forward svc/conv-app-clusterip 8080:80
+```
