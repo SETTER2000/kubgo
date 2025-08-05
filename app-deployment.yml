@@ -19,17 +19,23 @@ spec:
       containers:
         - name: conv-app
           image: antonlarichev/conv-app:1.2
+          env: # Добавил этот блок
+            - name: VITE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: conv-app-config
+                  key: VITE_DOMAIN
           ports:
             - containerPort: 80
           resources:
             limits:
               memory: "400Mi"
               cpu: "200m" # полная загрузка, 500m - 50%, 250M - 25%, 125 - 12,5%, 100 - 10%
-          volumeMounts:
-            - mountPath: /etc/cnf
-              name: cnf
-              readOnly: true # не можем редактировать из контейнера
-      volumes:
-        - name: cnf
-          configMap:
-            name: conv-app-config
+#          volumeMounts:
+#            - mountPath: /etc/cnf
+#              name: cnf
+#              readOnly: true # не можем редактировать из контейнера
+#      volumes:
+#        - name: cnf
+#          configMap:
+#            name: conv-app-config
