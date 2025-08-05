@@ -23,5 +23,13 @@ spec:
             - containerPort: 80
           resources:
             limits:
-              memory: "1028Mi"
-              cpu: "300m" # полная загрузка, 500m - 50%, 250M - 25%, 125 - 12,5%, 100 - 10%
+              memory: "400Mi"
+              cpu: "200m" # полная загрузка, 500m - 50%, 250M - 25%, 125 - 12,5%, 100 - 10%
+          volumeMounts:
+            - mountPath: /etc/cnf
+              name: cnf
+              readOnly: true # не можем редактировать из контейнера
+      volumes:
+        - name: cnf
+          configMap:
+            name: conv-app-config
