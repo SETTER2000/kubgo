@@ -42,6 +42,11 @@ spec:
                 secretKeyRef:
                   name: rmq-secret
                   key: AMQP_EXCHANGE
+            - name: AMQP_QUEUE
+              valueFrom:
+                secretKeyRef:
+                  name: rmq-secret
+                  key: AMQP_QUEUE
           resources:
             limits:
               memory: "500Mi"
