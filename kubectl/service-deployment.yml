@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       components: backend # здесь можно какое угодно наименование ключа использовать
-    # Шаблон пода
+    # Шаблон пода, здесь описываем шаблон того, что будем запускать внутри пода
   template:
     # По сути это копия metadata из файла pod.yml без name
     metadata:
@@ -49,5 +49,5 @@ spec:
                   key: AMQP_QUEUE
           resources:
             limits:
-              memory: "500Mi"
+              memory: "300Mi"
               cpu: "200m" # полная загрузка, 500m - 50%, 250M - 25%, 125 - 12,5%, 100 - 10%
