@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{.Values.app.name}}-deployment"
+spec:
+  # Задаётся кол-во реплик контейнера, из параметра template,
+  # который описывает контейнер ниже.
+  replicas: {{.Values.app.replicas}}
+  selector:
+    matchLabels:
+      components: {{.Values.app.components}}
+  # Шаблон пода
+  template:
+    # По сути это копия metadata из файла pod.yml без name
+    metadata:
+      labels:
+        components: {{.Values.app.components}}
+    spec:
+      containers:
+        - name: {{.Values.app.name}}
+          image: "{{.Values.app.image}}:{{.Values.app.version}}"
+          env: # Добавил этот блок
+            - name: {{.Values.app.env.name | upper}}
+              valueFrom:
+                configMapKeyRef:
+                  name: "{{.Values.app.name}}-config"
+                  key: {{.Values.app.env.name | upper}}
+          ports:
+            - containerPort: {{.Values.app.port}}
+          resources:
+            limits: {{.Values.app.limits | toYaml | nindent 15}}
+          volumeMounts:
+            - mountPath: /etc/cnf
+              name: cnf
+              readOnly: true # не можем редактировать из контейнера
+      volumes:
+        - name: cnf
+          configMap:
+            name: "{{.Values.app.name}}-config"
