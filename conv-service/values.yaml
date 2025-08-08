@@ -1,0 +1,18 @@
+app:
+  name: conv-app
+  image: antonlarichev/conv-app
+  version: 1.2
+  host: conv.test
+  components: frontend
+  port: 80
+  path: /
+  replicas: 1
+  pathType: Prefix
+  limits:
+    memory: "400Mi"
+    cpu: "200m" # полная загрузка, 500m - 50%, 250M - 25%, 125 - 12,5%, 100 - 10%
+  env:
+    name: vite_domain
+api:
+  port: 3000
+  path: /api

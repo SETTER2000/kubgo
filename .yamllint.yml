@@ -1,0 +1,32 @@
+extends: relaxed
+
+rules:
+  # Переносы строк
+  new-lines:
+    type: unix     # Только \n (LF), не \r\n (CRLF)
+  colons: # Пробелы после :
+    max-spaces-after: 1
+  commas: # Пробелы после ,
+    max-spaces-after: 0
+  empty-lines: # Макс. пустых строк подряд
+    max: 1
+  hyphens: # Пробелы после - в списках
+    max-spaces-after: 1
+  trailing-spaces: enable # Запрет пробелов в конце строк
+  indentation:
+    spaces: 2 # yamllint будет ожидать 2 пробела
+    indent-sequences: consistent
+
+  truthy:
+    allowed-values:
+      - 'true'   # Допустимо
+      - 'false'  # Допустимо
+
+  braces:
+    max-spaces-inside: 0           # Запретить пробелы в { }
+
+  brackets:
+    max-spaces-inside: 0           # Запретить пробелы в [ ]
+
+  comments:
+    min-spaces-from-content: 1     # Пробел после # в комментариях
