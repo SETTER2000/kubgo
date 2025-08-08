@@ -23,7 +23,7 @@ spec:
           {{- include "env.template" $data | indent 12 }}
           {{- end }}
           resources:
-            limits: {{.Values.app.limits | toYaml | nindent 15}}
+            limits: {{.Values.rmq.limits | toYaml | nindent 15}}
           volumeMounts:
             - name: "{{.Values.rmq.name}}-data"
               mountPath: /var/lib/rabbitmq/data
