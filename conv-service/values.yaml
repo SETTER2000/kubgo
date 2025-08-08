@@ -2,17 +2,70 @@ app:
   name: conv-app
   image: antonlarichev/conv-app
   version: 1.2
-  host: conv.test
   components: frontend
   port: 80
-  path: /
+  host: conv.test
   replicas: 1
-  pathType: Prefix
+  path: /
   limits:
     memory: "400Mi"
     cpu: "200m" # полная загрузка, 500m - 50%, 250M - 25%, 125 - 12,5%, 100 - 10%
-  env:
-    name: vite_domain
+  envs:
+    - VITE_DOMAIN
+
 api:
+  name: conv-api
+  image: antonlarichev/conv-api
+  version: "1.0"
+  components: backend
   port: 3000
+  host: conv.test
+  replicas: 1
   path: /api
+  limits:
+    memory: "500Mi"
+    cpu: "200m"
+  envs:
+    - AMQP_USER     # Логин для подключения к RabbitMQ.
+    - AMQP_PASSWORD # Пароль для подключения к RabbitMQ.
+    - AMQP_HOSTNAME # Хост для подключения к RabbitMQ.
+    - AMQP_EXCHANGE # Хранилище общее.
+    - AMQP_QUEUE    # Очередь для RabbitMQ.
+
+rmq:
+  name: rmq
+  image: rabbitmq
+  version: 3.13.7-management
+  components: rmq
+  port: 5672
+  limits:
+    memory: "500Mi"
+    cpu: "300m"
+  envs:
+    - RABBITMQ_DEFAULT_USER
+    - RABBITMQ_DEFAULT_PASS
+
+database:
+  user: demo       # demo - логин в rmq
+  password: demo   # demo - пароль в rmq
+  exchange: test   # test - общее хранилище данных
+  queue: converter # converter - очередь
+
+service:
+  name: conv-service
+  image: antonlarichev/conv-service
+  version: "1.0"
+  components: backend
+  port: 3000
+  host: conv.test
+  replicas: 1
+  path: /api
+  limits:
+    memory: "500Mi"
+    cpu: "200m"
+  envs:
+    - AMQP_USER     # Логин для подключения к RabbitMQ.
+    - AMQP_PASSWORD # Пароль для подключения к RabbitMQ.
+    - AMQP_HOSTNAME # Хост для подключения к RabbitMQ.
+    - AMQP_EXCHANGE # Хранилище общее.
+    - AMQP_QUEUE    # Очередь для RabbitMQ.

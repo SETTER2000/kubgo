@@ -3,15 +3,11 @@ kind: Deployment
 metadata:
   name: "{{.Values.app.name}}-deployment"
 spec:
-  # Задаётся кол-во реплик контейнера, из параметра template,
-  # который описывает контейнер ниже.
   replicas: {{.Values.app.replicas}}
   selector:
     matchLabels:
       components: {{.Values.app.components}}
-  # Шаблон пода
   template:
-    # По сути это копия metadata из файла pod.yml без name
     metadata:
       labels:
         components: {{.Values.app.components}}
@@ -19,21 +15,27 @@ spec:
       containers:
         - name: {{.Values.app.name}}
           image: "{{.Values.app.image}}:{{.Values.app.version}}"
-          env: # Добавил этот блок
-            - name: {{.Values.app.env.name | upper}}
-              valueFrom:
-                configMapKeyRef:
-                  name: "{{.Values.app.name}}-config"
-                  key: {{.Values.app.env.name | upper}}
           ports:
             - containerPort: {{.Values.app.port}}
           resources:
             limits: {{.Values.app.limits | toYaml | nindent 15}}
+          # Добавил этот блок
+          livenessProbe: # тестирование работает или нет само приложение
+            exec:
+              command: # проверяем отвечает (=0) ли нам приложение или нет (>0)
+                - curl
+                - --fail
+                - http://localhost:80/
+            # через 30 секунд после старта приложения запустить команду выше
+            initialDelaySeconds: 30
+            periodSeconds: 5 # каждые 5 сек. выполняем повторно команду выше
+            # допустима 1 ошибка, после этого считаем, что контейнер не рабочий
+            failureThreshold: 1
           volumeMounts:
-            - mountPath: /etc/cnf
-              name: cnf
-              readOnly: true # не можем редактировать из контейнера
+            - name: "{{.Values.app.name}}-data"
+              mountPath: /etc/cnf
+              readOnly: true
       volumes:
-        - name: cnf
+        - name: "{{.Values.app.name}}-data"
           configMap:
             name: "{{.Values.app.name}}-config"
