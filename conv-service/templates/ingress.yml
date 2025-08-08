@@ -10,17 +10,17 @@ spec:
     - host: {{.Values.app.host}}
       http:
         paths:
-          - pathType: {{.Values.app.pathType | title}}
+          - pathType: Prefix
             path: {{.Values.app.path}}
             backend:
               service:
                 name: "{{.Values.app.name}}-clusterip"
                 port:
                   number: {{.Values.app.port}}
-          - pathType: {{.Values.app.pathType | title}}
+          - pathType: Prefix
             path: {{.Values.api.path}}
             backend:
               service:
-                name: "{{.Values.app.name}}-clusterip"
+                name: "{{.Values.api.name}}-clusterip"
                 port:
                   number: {{.Values.api.port}}
