@@ -1,12 +1,12 @@
 app:
   name: conv-app
-  image: antonlarichev/conv-app
-  version: 1.2
+  image: setter2000/conv-app
+  version: "1.1"
   components: frontend
   port: 80
-  host: conv.test
+  host: "conv.test"
   replicas: 1
-  path: /
+  path: "/"
   limits:
     memory: "400Mi"
     cpu: "200m" # полная загрузка, 500m - 50%, 250M - 25%, 125 - 12,5%, 100 - 10%
@@ -21,7 +21,7 @@ api:
   port: 3000
   host: conv.test
   replicas: 1
-  path: /api
+  path: "/api"
   limits:
     memory: "500Mi"
     cpu: "200m"
@@ -35,7 +35,7 @@ api:
 rmq:
   name: rmq
   image: rabbitmq
-  version: 3.13.7-management
+  version: 3.12.7-management
   components: rmq
   port: 5672
   limits:
@@ -59,7 +59,6 @@ service:
   port: 3000
   host: conv.test
   replicas: 1
-  path: /api
   limits:
     memory: "500Mi"
     cpu: "200m"

@@ -17,25 +17,33 @@ spec:
           image: "{{.Values.app.image}}:{{.Values.app.version}}"
           ports:
             - containerPort: {{.Values.app.port}}
+          # Добавляем секцию envFrom для подключения ConfigMap как переменных окружения
+          envFrom:
+            - configMapRef:
+                name: "{{.Values.app.name}}-config"
+          env:
+            - name: VITE_DOMAIN  # Явное определение
+              value: "conv.test"       # Без дублирования домена
+          # Оставляем volumeMounts для доступа к конфигам как к файлам (если нужно)
           resources:
             limits: {{.Values.app.limits | toYaml | nindent 15}}
           # Добавил этот блок
-          livenessProbe: # тестирование работает или нет само приложение
-            exec:
-              command: # проверяем отвечает (=0) ли нам приложение или нет (>0)
-                - curl
-                - --fail
-                - http://localhost:80/
-            # через 30 секунд после старта приложения запустить команду выше
-            initialDelaySeconds: 30
-            periodSeconds: 5 # каждые 5 сек. выполняем повторно команду выше
-            # допустима 1 ошибка, после этого считаем, что контейнер не рабочий
-            failureThreshold: 1
+         # livenessProbe: # тестирование работает или нет само приложение
+          #  exec:
+          #    command: # проверяем отвечает (=0) ли нам приложение или нет (>0)
+          #      - curl
+          #      - --fail
+           #     - http://localhost:80/
+           # # через 30 секунд после старта приложения запустить команду выше
+           # initialDelaySeconds: 30
+           # periodSeconds: 10 # каждые 10 сек. выполняем повторно команду выше
+           # timeoutSeconds: 5 # Ждёт ответа не более 3 секунды
+           # failureThreshold: 5 # перезапуск после третий ошибки
           volumeMounts:
-            - name: "{{.Values.app.name}}-data"
-              mountPath: /etc/cnf
+            - name: "test"
+              mountPath: "/etc/test"
               readOnly: true
       volumes:
-        - name: "{{.Values.app.name}}-data"
+        - name: "test"
           configMap:
             name: "{{.Values.app.name}}-config"

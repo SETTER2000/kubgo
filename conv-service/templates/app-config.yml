@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: "{{.Values.app.name}}-config"
 data:
-  VITE_DOMAIN: {{.Values.app.host | quote}}
+  VITE_DOMAIN: "conv.test"

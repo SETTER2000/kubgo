@@ -26,7 +26,7 @@ spec:
             limits: {{.Values.rmq.limits | toYaml | nindent 15}}
           volumeMounts:
             - name: "{{.Values.rmq.name}}-data"
-              mountPath: /var/lib/rabbitmq/data
+              mountPath: /var/lib/rabbitmq
               subPath: {{.Values.rmq.name}}
       volumes:
         - name: "{{.Values.rmq.name}}-data"

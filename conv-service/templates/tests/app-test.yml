@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{.Release.Name}}-app-test"
+  labels:
+    components: {{.Values.app.components}}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+     # args: ['{{.Values.app.name}}-clusterip:{{.Values.app.port}}']
+      args: ['http://conv-app-clusterip:80']
+     # args: ['{{.Values.service.name}}-clusterip:{{.Values.service.port}}']
+     # args: ['localhost:80']
+  restartPolicy: Never # никогда после отработки не запускать повторно
