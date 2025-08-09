@@ -1,7 +1,7 @@
 app:
   name: conv-app
   image: setter2000/conv-app
-  version: "1.1"
+  version: "1.4"
   components: frontend
   port: 80
   host: "conv.test"
