@@ -6,13 +6,11 @@ metadata:
     components: {{.Values.app.components}}
   annotations:
     "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
   containers:
-    - name: wget
+    - name: wget-test
       image: busybox
-      command: ['wget']
-     # args: ['{{.Values.app.name}}-clusterip:{{.Values.app.port}}']
-      args: ['http://conv-app-clusterip:80']
-     # args: ['{{.Values.service.name}}-clusterip:{{.Values.service.port}}']
-     # args: ['localhost:80']
-  restartPolicy: Never # никогда после отработки не запускать повторно
+      command: ['/bin/sh', '-c']
+      args: ['wget -q -T 5 -O - http://{{.Values.app.name}}-clusterip:80 && echo "Test passed" || echo "Test failed"']
+  restartPolicy: Never
